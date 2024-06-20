@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/20 13:42:24 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/06/20 18:35:02 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ bool	is_entry_valid(int argc, char **argv);
 
 typedef struct s_philo
 {
-	// [struct to fill]
+	int				philo_number;
+	pthread_t		*philo;
+	pthread_mutex_t	*fork;
 }				t_philo;
+
 #endif
