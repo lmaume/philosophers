@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/21 16:59:13 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/06/26 17:03:09 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,38 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+typedef struct s_philo
+{
+	int				it;
+	int				eat_count;
+	suseconds_t		last_meal;
+	pthread_t		*philo;
+	pthread_mutex_t	*fork;
+}						t_philo;
+
+typedef struct s_monitor
+{
+	int				philo_number;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				must_eat;
+	suseconds_t		started_at;
+	struct timeval	*time;
+	struct s_philo	*philo;
+}						t_monit;
+
 // ? BASE FUNCTIONS (LIB SUBSTITUTE) :
 size_t	ft_strlen(const char *str);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(char *nptr, int *error);
 
 // ? PARSING FUNCTIONS :
-bool	is_entry_valid(int argc, char **argv);
+bool	is_entry_valid(int argc, t_monit *table);
+void	mssleep(int time);
 
-typedef struct s_monitor
-{
-	int			philo_number;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			must_eat;
-	pthread_t		*philo;
-	pthread_mutex_t	*fork;
-}				t_monit;
-
-typedef struct s_philo
-{
-	int				*it;
-	int				id;
-	t_monit			m;
-}				t_philo;
+// ? COMPARE DATAS :
+bool	is_dead(t_monit *table);
+void	could_i_eat(t_monit *table);
 
 #endif

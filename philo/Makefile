@@ -2,13 +2,14 @@ NAME = philosophers
 
 SRCS =	philosophers.c \
 		parsing.c \
-		ft_atoi.c
+		ft_atoi.c \
+		time.c
 
 PRINTF = ./printf/libftprintf.a
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -pthread -g3
 
 RM = rm -f
 
