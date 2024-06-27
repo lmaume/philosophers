@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/26 17:59:35 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/06/27 17:21:45 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,40 @@ void	*routine(void	*arg)
 
 	table = arg;
 	table->philo->eat_count = 0;
-	while (is_dead(table) != true || table->philo->eat_count < table->must_eat)
+	while (is_dead(table, false) != true)
 	{
+		if (table->is_limited == true && table->philo->eat_count >= table->must_eat)
+			break ;
 		if (gettimeofday(table->time, NULL) != 0)
 			return (false);
 		could_i_eat(table);
 		if (gettimeofday(table->time, NULL) != 0)
 			return (NULL);
-		printf("je suis ici %ld\n", table->time->tv_sec / 1000);
-		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (table->time->tv_usec - table->started_at), table->philo->it + 1);
+		printf("je suis ici %ld\n", ms_time(table->time) - table->started_at);
+		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (ms_time(table->time) - table->started_at), table->philo->it + 1);
 		mssleep(table->time_to_sleep);
 	}
-	if (table->philo->eat_count < table->must_eat)
-	{
-		printf("\e[1;31m%ld evrerybody ate.\e[0m\n", (table->time->tv_usec / 1000 - table->started_at));
-	}
+	if (table->philo->eat_count == table->must_eat)
+		printf("\e[1;31m%ld evrerybody ate.\e[0m\n", (ms_time(table->time) - table->started_at));
 	else
 	{
-		if (gettimeofday(table->time, NULL) != 0)
+		if (is_dead(table, true) == true)
 			return (NULL);
-		printf("\e[1;31m%ld %d died.\e[0m\n", (table->time->tv_usec / 1000 - table->started_at), table->philo->it + 1);
 	}
 	return (arg);
+}
+
+bool	thread_join(t_monit *table)
+{
+	table->philo->it = 0;
+	while (table->philo->it < table->philo_number)
+	{
+		if (pthread_join(table->philo->philo[table->philo->it], \
+														NULL) != 0)
+			exit(1);
+		table->philo->it++;
+	}
+	return (true);
 }
 
 bool	thread_init(t_monit *table)
@@ -50,15 +62,11 @@ bool	thread_init(t_monit *table)
 		if (pthread_mutex_init(table->philo->fork, NULL) != 0)
 			exit(1);
 		if (pthread_create(&table->philo->philo[table->philo->it], \
-							NULL, (void *)routine, table) != 0)
-			exit(1);
-		if (pthread_join(table->philo->philo[table->philo->it], \
-											NULL) != 0)
-			exit(1);
-		if (pthread_mutex_destroy(table->philo->fork) != 0)
+									NULL, (void *)routine, table) != 0)
 			exit(1);
 		table->philo->it++;
 	}
+	thread_join(table);
 	return (true);
 }
 
@@ -79,7 +87,11 @@ bool	init_structure(t_monit	*table, int argc, char **argv)
 {
 	if (argc < 5)
 		return (false);
-	table->started_at = (table->time->tv_usec / 1000);
+	if (argc == 5)
+		table->is_limited = true;
+	else
+		table->is_limited = false;
+	table->started_at = (ms_time(table->time));
 	table->philo_number = ft_atoi(argv[1], NULL);
 	table->time_to_die = ft_atoi(argv[2], NULL);
 	table->time_to_eat = ft_atoi(argv[3], NULL);
@@ -98,6 +110,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (thread_maker(&table) == false)
 		return (1);
-	sleep(3);
+	if (pthread_mutex_destroy(table.philo->fork) != 0)
+		exit(1);
 	return (0);
 }

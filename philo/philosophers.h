@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/26 17:03:09 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/06/27 17:21:52 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ typedef struct s_monitor
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				must_eat;
-	suseconds_t		started_at;
+	bool			is_limited;
+	long			started_at;
 	struct timeval	*time;
 	struct s_philo	*philo;
 }						t_monit;
@@ -52,7 +53,8 @@ bool	is_entry_valid(int argc, t_monit *table);
 void	mssleep(int time);
 
 // ? COMPARE DATAS :
-bool	is_dead(t_monit *table);
+bool	is_dead(t_monit *table, bool print);
 void	could_i_eat(t_monit *table);
+long	ms_time(struct timeval *time);
 
 #endif
