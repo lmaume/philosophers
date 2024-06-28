@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/27 17:21:45 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/06/28 18:19:12 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ void	*routine(void	*arg)
 
 	table = arg;
 	table->philo->eat_count = 0;
-	while (is_dead(table, false) != true)
+	while (is_dead(table, false) == false)
 	{
+		printf("last meal %ld of philo %d\n", ((ms_time(table->time) - table->started_at)) - (table->philo->last_meal), table->philo->it + 1);
 		if (table->is_limited == true && table->philo->eat_count >= table->must_eat)
 			break ;
 		if (gettimeofday(table->time, NULL) != 0)
@@ -27,17 +28,13 @@ void	*routine(void	*arg)
 		could_i_eat(table);
 		if (gettimeofday(table->time, NULL) != 0)
 			return (NULL);
-		printf("je suis ici %ld\n", ms_time(table->time) - table->started_at);
 		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (ms_time(table->time) - table->started_at), table->philo->it + 1);
 		mssleep(table->time_to_sleep);
 	}
-	if (table->philo->eat_count == table->must_eat)
+	if (table->is_limited == true && table->philo->eat_count == table->must_eat)
 		printf("\e[1;31m%ld evrerybody ate.\e[0m\n", (ms_time(table->time) - table->started_at));
-	else
-	{
-		if (is_dead(table, true) == true)
-			return (NULL);
-	}
+	else if (is_dead(table, true) == true)
+		return (NULL);
 	return (arg);
 }
 
