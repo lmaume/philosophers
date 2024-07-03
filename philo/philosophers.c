@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/28 18:19:12 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/03 17:49:07 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,29 @@ void	*routine(void	*arg)
 
 	table = arg;
 	table->philo->eat_count = 0;
-	while (is_dead(table, false) == false)
+	while (table->death == false)
 	{
-		printf("last meal %ld of philo %d\n", ((ms_time(table->time) - table->started_at)) - (table->philo->last_meal), table->philo->it + 1);
-		if (table->is_limited == true && table->philo->eat_count >= table->must_eat)
+		printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
+		table->started_at) - table->philo->last_meal, table->philo->it + 1);
+		if (table->is_limited == true \
+		&& table->philo->eat_count >= table->must_eat)
 			break ;
-		if (gettimeofday(table->time, NULL) != 0)
-			return (false);
 		could_i_eat(table);
-		if (gettimeofday(table->time, NULL) != 0)
-			return (NULL);
-		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (ms_time(table->time) - table->started_at), table->philo->it + 1);
+		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (ms_time(table->time) - \
+		table->started_at), table->philo->it + 1);
 		mssleep(table->time_to_sleep);
 	}
-	if (table->is_limited == true && table->philo->eat_count == table->must_eat)
-		printf("\e[1;31m%ld evrerybody ate.\e[0m\n", (ms_time(table->time) - table->started_at));
+	if (table->is_limited == true)
+	{
+		if (table->philo->eat_count == table->must_eat)
+		{
+			printf("\e[1;31m%ld evrerybody ate.\e[0m\n", \
+				(ms_time(table->time) - table->started_at));
+			table->death = true;
+		}
+	}
 	else if (is_dead(table, true) == true)
-		return (NULL);
+		return (table->death = true, NULL);
 	return (arg);
 }
 
@@ -67,7 +73,7 @@ bool	thread_init(t_monit *table)
 	return (true);
 }
 
-// TODO : Thread to verify death.
+// TODO : Thread to verify death (in the main maybe ??).
 bool	thread_maker(t_monit *table)
 {
 	table->philo = malloc(sizeof(t_philo) * table->philo_number);
@@ -84,16 +90,17 @@ bool	init_structure(t_monit	*table, int argc, char **argv)
 {
 	if (argc < 5)
 		return (false);
-	if (argc == 5)
+	if (argc == 6)
 		table->is_limited = true;
 	else
 		table->is_limited = false;
+	table->death = false;
 	table->started_at = (ms_time(table->time));
 	table->philo_number = ft_atoi(argv[1], NULL);
 	table->time_to_die = ft_atoi(argv[2], NULL);
 	table->time_to_eat = ft_atoi(argv[3], NULL);
 	table->time_to_sleep = ft_atoi(argv[4], NULL);
-	if (argv[5] != NULL)
+	if (argc == 6 && argv[5] != NULL)
 		table->must_eat = ft_atoi(argv[5], NULL);
 	return (true);
 }
@@ -109,5 +116,6 @@ int	main(int argc, char **argv)
 		return (1);
 	if (pthread_mutex_destroy(table.philo->fork) != 0)
 		exit(1);
-	return (0);
+	if (table.death == true)
+		return (0);
 }

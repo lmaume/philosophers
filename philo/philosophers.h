@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/27 17:21:52 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/03 17:04:31 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_monitor
 	int				time_to_sleep;
 	int				must_eat;
 	bool			is_limited;
+	bool			death;
 	long			started_at;
 	struct timeval	*time;
 	struct s_philo	*philo;

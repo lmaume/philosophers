@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/28 17:44:28 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/01 15:36:47 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 
 bool	is_dead(t_monit *table, bool print)
 {
-	if (((ms_time(table->time) - table->started_at)) - (table->philo->last_meal) > table->time_to_die)
+	if (((ms_time(table->time) - table->started_at)) - \
+			(table->philo->last_meal) > table->time_to_die)
 	{
 		printf("is last meal %ld > t-die? %d for philo %d, time to die %d\n", \
-		((ms_time(table->time) - table->started_at) - table->philo->last_meal), table->time_to_die, table->philo->it + 1, table->time_to_die);
+							((ms_time(table->time) - table->started_at) - \
+							table->philo->last_meal), table->time_to_die, \
+								table->philo->it + 1, table->time_to_die);
 		if (print == true)
-			printf("\e[1;31m%ld %d died.\e[0m\n", (ms_time(table->time) - table->started_at), table->philo->it + 1);
+			printf("\e[1;31m%ld %d died.\e[0m\n", (ms_time(table->time) - \
+									table->started_at), table->philo->it + 1);
 		return (true);
 	}
 	return (false);
@@ -39,10 +43,8 @@ void	eating_process(t_monit *table, int *did_eat)
 	printf("");
 	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
 	(ms_time(table->time) - table->started_at), table->philo->it + 1);
-
 	printf("\e[1;32m%ld %d is eating.\e[0m\n", \
 	(ms_time(table->time) - table->started_at), table->philo->it + 1);
-
 	if (gettimeofday(table->time, NULL) != 0)
 		return ;
 	table->philo->last_meal = (ms_time(table->time) - table->started_at);
