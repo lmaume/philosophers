@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/01 15:36:47 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/04 17:54:23 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ void	eating_process(t_monit *table, int *did_eat)
 {
 	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
 	(ms_time(table->time) - table->started_at), table->philo->it + 1);
-	printf("");
+
 	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
 	(ms_time(table->time) - table->started_at), table->philo->it + 1);
+
 	printf("\e[1;32m%ld %d is eating.\e[0m\n", \
 	(ms_time(table->time) - table->started_at), table->philo->it + 1);
 	if (gettimeofday(table->time, NULL) != 0)

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/03 17:49:07 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/04 17:58:32 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*routine(void	*arg)
 
 	table = arg;
 	table->philo->eat_count = 0;
-	while (table->death == false)
+	while (table->end == false)
 	{
 		printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
 		table->started_at) - table->philo->last_meal, table->philo->it + 1);
@@ -26,7 +26,7 @@ void	*routine(void	*arg)
 		&& table->philo->eat_count >= table->must_eat)
 			break ;
 		could_i_eat(table);
-		printf("\e[1;34m%ld %d is speeping.\e[0m\n", (ms_time(table->time) - \
+		printf("\e[1;34m%ld %d is sleeping.\e[0m\n", (ms_time(table->time) - \
 		table->started_at), table->philo->it + 1);
 		mssleep(table->time_to_sleep);
 	}
@@ -34,13 +34,11 @@ void	*routine(void	*arg)
 	{
 		if (table->philo->eat_count == table->must_eat)
 		{
-			printf("\e[1;31m%ld evrerybody ate.\e[0m\n", \
-				(ms_time(table->time) - table->started_at));
-			table->death = true;
+			print_sleep(table);
 		}
 	}
 	else if (is_dead(table, true) == true)
-		return (table->death = true, NULL);
+		return (table->end = true, NULL);
 	return (arg);
 }
 
@@ -80,9 +78,9 @@ bool	thread_maker(t_monit *table)
 	table->philo->philo = malloc(sizeof(pthread_t) * table->philo_number);
 	table->philo->fork = malloc(sizeof(pthread_mutex_t) * table->philo_number);
 	thread_init(table);
-	free(table->philo);
 	free(table->philo->philo);
 	free(table->philo->fork);
+	free(table->philo);
 	return (true);
 }
 
@@ -94,7 +92,7 @@ bool	init_structure(t_monit	*table, int argc, char **argv)
 		table->is_limited = true;
 	else
 		table->is_limited = false;
-	table->death = false;
+	table->end = false;
 	table->started_at = (ms_time(table->time));
 	table->philo_number = ft_atoi(argv[1], NULL);
 	table->time_to_die = ft_atoi(argv[2], NULL);
@@ -116,6 +114,6 @@ int	main(int argc, char **argv)
 		return (1);
 	if (pthread_mutex_destroy(table.philo->fork) != 0)
 		exit(1);
-	if (table.death == true)
+	if (table.end == true)
 		return (0);
 }

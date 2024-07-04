@@ -6,7 +6,7 @@
 #    By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 16:44:17 by lmaume            #+#    #+#              #
-#    Updated: 2024/06/27 16:44:19 by lmaume           ###   ########.fr        #
+#    Updated: 2024/07/04 16:40:07 by lmaume           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ NAME = philosophers
 SRCS =	philosophers.c \
 		parsing.c \
 		ft_atoi.c \
-		time.c
+		time.c \
+		print.c
 
 PRINTF = ./printf/libftprintf.a
 
