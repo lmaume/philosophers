@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/04 16:41:58 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/24 17:22:51 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,11 @@ void	could_i_eat(t_monit *table);
 long	ms_time(struct timeval *time);
 
 // ? PRINTS :
+void	print_ate(t_monit *table);
 void	print_sleep(t_monit *table);
-
+void	print_fork(t_monit *table);
+void	print_eat(t_monit *table);
+void	print_think(t_monit *table);
+void	print_death(t_monit *table);
 
 #endif

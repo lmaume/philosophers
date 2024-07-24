@@ -6,11 +6,17 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/04 17:58:32 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/24 13:56:37 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+static void	meal_test_printer(t_monit *table)
+{
+	printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
+	table->started_at) - table->philo->last_meal, table->philo->it + 1);
+}
 
 void	*routine(void	*arg)
 {
@@ -20,24 +26,20 @@ void	*routine(void	*arg)
 	table->philo->eat_count = 0;
 	while (table->end == false)
 	{
-		printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
-		table->started_at) - table->philo->last_meal, table->philo->it + 1);
+		meal_test_printer(table);
+
 		if (table->is_limited == true \
 		&& table->philo->eat_count >= table->must_eat)
-			break ;
+		{
+			printf("\e[1;31m%ld everybody ate.\e[0m\n", \
+			(ms_time(table->time) - table->started_at));
+			return (table->end = true, NULL);
+		}
 		could_i_eat(table);
-		printf("\e[1;34m%ld %d is sleeping.\e[0m\n", (ms_time(table->time) - \
-		table->started_at), table->philo->it + 1);
+		print_sleep(table);
 		mssleep(table->time_to_sleep);
 	}
-	if (table->is_limited == true)
-	{
-		if (table->philo->eat_count == table->must_eat)
-		{
-			print_sleep(table);
-		}
-	}
-	else if (is_dead(table, true) == true)
+	if (is_dead(table, true) == true)
 		return (table->end = true, NULL);
 	return (arg);
 }
@@ -71,7 +73,6 @@ bool	thread_init(t_monit *table)
 	return (true);
 }
 
-// TODO : Thread to verify death (in the main maybe ??).
 bool	thread_maker(t_monit *table)
 {
 	table->philo = malloc(sizeof(t_philo) * table->philo_number);
@@ -114,6 +115,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (pthread_mutex_destroy(table.philo->fork) != 0)
 		exit(1);
-	if (table.end == true)
-		return (0);
+	while (table.end != true)
+		sleep(1);
+	return (0);
 }

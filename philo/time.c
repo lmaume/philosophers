@@ -6,24 +6,28 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/04 17:54:23 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/07/24 15:10:27 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+static void death_test_printer(t_monit *table)
+{
+	printf("is last meal %ld > t-die? philo %d, time to die %d\n", \
+	((ms_time(table->time) - table->started_at) - table->philo->last_meal), \
+	table->philo->it + 1, table->time_to_die);
+}
 
 bool	is_dead(t_monit *table, bool print)
 {
 	if (((ms_time(table->time) - table->started_at)) - \
 			(table->philo->last_meal) > table->time_to_die)
 	{
-		printf("is last meal %ld > t-die? %d for philo %d, time to die %d\n", \
-							((ms_time(table->time) - table->started_at) - \
-							table->philo->last_meal), table->time_to_die, \
-								table->philo->it + 1, table->time_to_die);
+		death_test_printer(table);
+
 		if (print == true)
-			printf("\e[1;31m%ld %d died.\e[0m\n", (ms_time(table->time) - \
-									table->started_at), table->philo->it + 1);
+			print_death(table);
 		return (true);
 	}
 	return (false);
@@ -38,14 +42,12 @@ long	ms_time(struct timeval *time)
 
 void	eating_process(t_monit *table, int *did_eat)
 {
-	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
-	(ms_time(table->time) - table->started_at), table->philo->it + 1);
+	print_fork(table);
+	
+	print_fork(table);
 
-	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
-	(ms_time(table->time) - table->started_at), table->philo->it + 1);
-
-	printf("\e[1;32m%ld %d is eating.\e[0m\n", \
-	(ms_time(table->time) - table->started_at), table->philo->it + 1);
+	print_eat(table);
+	
 	if (gettimeofday(table->time, NULL) != 0)
 		return ;
 	table->philo->last_meal = (ms_time(table->time) - table->started_at);
@@ -62,8 +64,7 @@ void	could_i_eat(t_monit *table)
 	if (pthread_mutex_lock(&table->philo->fork[table->philo->it]) != 0 || \
 			pthread_mutex_lock(&table->philo->fork[(table->philo->it + 1) \
 												% table->philo_number]) != 0)
-		printf("\e[1;33m%ld %d is thinking.\e[0m\n", \
-		(ms_time(table->time) - table->started_at), table->philo->it + 1);
+		print_think(table);
 	else
 	{
 		eating_process(table, &did_eat);
