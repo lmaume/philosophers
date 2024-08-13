@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 14:48:54 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/13 16:52:13 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ bool	is_entry_valid(int argc, t_monit *table);
 void	mssleep(int time);
 
 // ? COMPARE DATAS :
-bool	is_dead(t_monit *table, bool print);
+bool	is_dead(t_philo *philo, bool print);
 void	could_i_eat(t_philo *philo);
 long	ms_time(struct timeval *time);
 
 // ? PRINTS :
-void	print_ate(t_monit *table);
-void	print_sleep(t_monit *table);
-void	print_fork(t_monit *table);
-void	print_eat(t_monit *table);
-void	print_think(t_monit *table);
-void	print_death(t_monit *table);
+void	print_ate(t_philo *philo);
+void	print_sleep(t_philo *philo);
+void	print_fork(t_philo *philo);
+void	print_eat(t_philo *philo);
+void	print_think(t_philo *philo);
+void	print_death(t_philo *philo);
 
 #endif

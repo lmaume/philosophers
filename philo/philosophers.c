@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 14:43:17 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/13 16:57:21 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,47 +24,14 @@ void	*routine(void	*arg)
 
 	philo = arg;
 	
-	could_i_eat(philo);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// printf("nb philo : %d\n", philo->id);
-	// philo->eat_count = 0;
-	// while (1)
-	// {
-	// 	printf("je suis vivant !!!! %d\n", philo->id);
-	// 	philo->eat_count++;
-	// 	if (philo->eat_count == 3)
-	// 		return (0);
-	// }
-
-
+	while (1)
+	{
+		could_i_eat(philo);
+	}
 
 	
-	// if (is_dead(table, true) == true)
-	// 	return (table->end = true, NULL);
+	if (is_dead(philo, true) == true)
+		return (philo->table->end = true, NULL);
 	return (0);
 }
 
