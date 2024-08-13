@@ -6,68 +6,123 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/24 13:56:37 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/13 14:43:17 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static void	meal_test_printer(t_monit *table)
-{
-	printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
-	table->started_at) - table->philo->last_meal, table->philo->it + 1);
-}
+// static void	meal_test_printer(t_monit *table)
+// {
+// 	printf("last meal %ld of philo %d\n", (ms_time(table->time) - \
+// 	table->started_at) - table->philo->last_meal, table->philo->id + 1);
+// }
 
 void	*routine(void	*arg)
 {
-	t_monit	*table;
+	t_philo	*philo;
 
-	table = arg;
-	table->philo->eat_count = 0;
-	while (table->end == false)
-	{
-		meal_test_printer(table);
+	philo = arg;
+	
+	could_i_eat(philo);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// printf("nb philo : %d\n", philo->id);
+	// philo->eat_count = 0;
+	// while (1)
+	// {
+	// 	printf("je suis vivant !!!! %d\n", philo->id);
+	// 	philo->eat_count++;
+	// 	if (philo->eat_count == 3)
+	// 		return (0);
+	// }
 
-		if (table->is_limited == true \
-		&& table->philo->eat_count >= table->must_eat)
-		{
-			printf("\e[1;31m%ld everybody ate.\e[0m\n", \
-			(ms_time(table->time) - table->started_at));
-			return (table->end = true, NULL);
-		}
-		could_i_eat(table);
-		print_sleep(table);
-		mssleep(table->time_to_sleep);
-	}
-	if (is_dead(table, true) == true)
-		return (table->end = true, NULL);
-	return (arg);
+
+
+	
+	// if (is_dead(table, true) == true)
+	// 	return (table->end = true, NULL);
+	return (0);
 }
 
 bool	thread_join(t_monit *table)
 {
-	table->philo->it = 0;
-	while (table->philo->it < table->philo_number)
+	size_t	i;
+
+	i = 0;
+	while (i < (size_t)table->philo_number)
 	{
-		if (pthread_join(table->philo->philo[table->philo->it], \
-														NULL) != 0)
-			exit(1);
-		table->philo->it++;
+		if (pthread_join(table->philo[i].philo, NULL) != 0)
+			return (1);
+		i++;
 	}
 	return (true);
 }
 
+int	init_fork(t_monit *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philo_number)
+	{
+		if (pthread_mutex_init(table->philo[i].fork, NULL) != 0)
+			return (3);
+		i++;
+	}
+	return (0);
+}
+
+void	init_philo(t_monit *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->philo_number)
+	{
+		table->philo[i].id = i + 1;
+		table->philo[i].fork = malloc(sizeof(pthread_mutex_t));
+		i++;
+	}
+}
+
 bool	thread_init(t_monit *table)
 {
-	table->philo->it = 0;
-	while (table->philo->it < table->philo_number)
+	int	i;
+
+	i = 0;
+	if (pthread_mutex_init(&table->print_right, NULL) != 0)
+		exit(1);
+	init_philo(table);
+	init_fork(table);
+	while (i < table->philo_number)
 	{
-		if (pthread_mutex_init(table->philo->fork, NULL) != 0)
+		if (pthread_create(&table->philo[i].philo, NULL, (void *)routine, &table->philo[i]) != 0)
 			exit(1);
-		if (pthread_create(&table->philo->philo[table->philo->it], \
-									NULL, (void *)routine, table) != 0)
-			exit(1);
-		table->philo->it++;
+		i++;
 	}
 	thread_join(table);
 	return (true);
@@ -75,11 +130,10 @@ bool	thread_init(t_monit *table)
 
 bool	thread_maker(t_monit *table)
 {
-	table->philo = malloc(sizeof(t_philo) * table->philo_number);
-	table->philo->philo = malloc(sizeof(pthread_t) * table->philo_number);
-	table->philo->fork = malloc(sizeof(pthread_mutex_t) * table->philo_number);
+	table->philo = calloc(sizeof(t_philo), table->philo_number);
+	
 	thread_init(table);
-	free(table->philo->philo);
+	
 	free(table->philo->fork);
 	free(table->philo);
 	return (true);

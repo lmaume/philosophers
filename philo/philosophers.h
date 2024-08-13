@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/07/24 17:22:51 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/13 14:48:54 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,16 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+struct s_monitor;
+
 typedef struct s_philo
 {
-	int				it;
-	int				eat_count;
-	suseconds_t		last_meal;
-	pthread_t		*philo;
-	pthread_mutex_t	*fork;
+	int					id;
+	int					eat_count;
+	suseconds_t			last_meal;
+	pthread_t			philo;
+	pthread_mutex_t		*fork;
+	struct s_monitor	*table;
 }						t_philo;
 
 typedef struct s_monitor
@@ -56,7 +59,7 @@ void	mssleep(int time);
 
 // ? COMPARE DATAS :
 bool	is_dead(t_monit *table, bool print);
-void	could_i_eat(t_monit *table);
+void	could_i_eat(t_philo *philo);
 long	ms_time(struct timeval *time);
 
 // ? PRINTS :
