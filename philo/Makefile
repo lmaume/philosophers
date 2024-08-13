@@ -6,7 +6,7 @@
 #    By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 16:44:17 by lmaume            #+#    #+#              #
-#    Updated: 2024/07/29 09:17:21 by lmaume           ###   ########.fr        #
+#    Updated: 2024/08/13 18:09:59 by lmaume           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ PRINTF = ./printf/libftprintf.a
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -pthread -g3
+CFLAGS = -Wall -Wextra -Werror -pthread -g3 -fsanitize=thread
 
 RM = rm -f
 

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 16:54:37 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/13 18:08:44 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ long	ms_time(struct timeval *time)
 	return ((time->tv_sec * 1000 + time->tv_usec / 1000));
 }
 
-void	eating_process(t_philo *philo, int *did_eat)
+void	eating_process(t_philo *philo)
 {
 	print_fork(philo);
 	
@@ -53,28 +53,17 @@ void	eating_process(t_philo *philo, int *did_eat)
 	philo->table->philo->last_meal = (ms_time(philo->table->time) \
 										- philo->table->started_at);
 	mssleep(philo->table->time_to_eat);
-	*did_eat = 1;
 }
 
 void	could_i_eat(t_philo *philo)
 {
-	int		did_eat;
-
-	did_eat = 0;
 	printf("%d wants to eat\n", philo->id);
-	if (pthread_mutex_lock(&philo->fork[philo->id]) != 0 || \
-			pthread_mutex_lock(&philo->fork[(philo->id) \
-									% philo->table->philo_number]) != 0)
-		print_think(philo);
-	else
-	{
-		eating_process(philo, &did_eat);
-		philo->eat_count++;
-	}
-	if (did_eat == 1)
-	{
-		pthread_mutex_unlock(&philo->fork[philo->id]);
+	pthread_mutex_lock(&philo->fork[philo->id]);
+	pthread_mutex_lock(&philo->fork[(philo->id) \
+					% philo->table->philo_number]);
+	eating_process(philo);
+	philo->eat_count++;
 		pthread_mutex_unlock(&philo->fork[(philo->id) \
-									% philo->table->philo_number]);
-	}
+							% philo->table->philo_number]);
+		pthread_mutex_unlock(&philo->fork[philo->id]);
 }
