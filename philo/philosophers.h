@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 16:52:13 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/15 17:39:15 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int		ft_atoi(char *nptr, int *error);
 
 // ? PARSING FUNCTIONS :
 bool	is_entry_valid(int argc, t_monit *table);
-void	mssleep(int time);
+void	mssleep(int duration, struct timeval *time);
 
 // ? COMPARE DATAS :
 bool	is_dead(t_philo *philo, bool print);

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 17:07:33 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/15 18:12:44 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	*routine(void	*arg)
 	t_philo	*philo;
 
 	philo = arg;
-	
+	if (philo->id % 2 == 0)
+		mssleep(10, philo->table->time);
 	while (1)
 	{
 		print_think(philo);
@@ -136,9 +137,9 @@ int	main(int argc, char **argv)
 		return (1);
 	if (thread_maker(&table) == false)
 		return (1);
-	if (pthread_mutex_destroy(table.philo->fork) != 0)
-		exit(1);
 	while (table.end != true)
 		sleep(1);
+	// if (pthread_mutex_destroy(table.philo->fork) != 0)
+	// 	return (1);
 	return (0);
 }

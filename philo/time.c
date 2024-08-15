@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/13 18:08:44 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/15 18:11:42 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,37 @@ long	ms_time(struct timeval *time)
 void	eating_process(t_philo *philo)
 {
 	print_fork(philo);
-	
 	print_fork(philo);
 
 	print_eat(philo);
-	
+
 	if (gettimeofday(philo->table->time, NULL) != 0)
 		return ;
 	philo->table->philo->last_meal = (ms_time(philo->table->time) \
 										- philo->table->started_at);
-	mssleep(philo->table->time_to_eat);
+	mssleep(philo->table->time_to_eat, philo->table->time);
+	printf("g bein manget \n");
 }
 
 void	could_i_eat(t_philo *philo)
 {
 	printf("%d wants to eat\n", philo->id);
-	pthread_mutex_lock(&philo->fork[philo->id]);
-	pthread_mutex_lock(&philo->fork[(philo->id) \
-					% philo->table->philo_number]);
+	pthread_mutex_lock(philo->fork);
+	printf("%d a lock le 1er mutex\n", philo->id);
+	
+	pthread_mutex_lock(philo->table->philo[philo->id \
+					% philo->table->philo_number].fork);
+	printf("%d a lock le 2er mutex\n", philo->id);
+
+
 	eating_process(philo);
 	philo->eat_count++;
-		pthread_mutex_unlock(&philo->fork[(philo->id) \
-							% philo->table->philo_number]);
-		pthread_mutex_unlock(&philo->fork[philo->id]);
+
+
+	pthread_mutex_unlock(philo->table->philo[philo->id \
+					% philo->table->philo_number].fork);
+	printf("%d a unlock le 1er mutex\n", philo->id);
+
+	pthread_mutex_unlock(philo->fork);
+	printf("%d a unlock le 2er mutex\n", philo->id);
 }

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:12:33 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/25 15:56:32 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/15 17:58:52 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,18 @@ bool	is_entry_valid(int argc, t_monit *table)
 	return (true);
 }
 
-void	mssleep(int time)
+void	mssleep(int duration, struct timeval *time)
 {
-	if (usleep(time * 1000) != 0)
-		return ;
+	long int	time_it;
+	long int	timer;
+
+	printf("fil de Putin.\n");
+	time_it = ms_time(time);
+	while (1)
+	{
+		timer = ms_time(time);
+		if (timer - time_it >= duration)
+			return ;
+		usleep(1000);
+	}
 }
