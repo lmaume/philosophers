@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/15 17:39:15 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/16 18:15:05 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-struct s_monitor;
+struct	s_monitor;
 
 typedef struct s_philo
 {
@@ -43,19 +43,26 @@ typedef struct s_monitor
 	long			started_at;
 	bool			end;
 	bool			is_limited;
-	pthread_mutex_t	print_right;
+	pthread_mutex_t	*print_right;
 	struct timeval	*time;
 	struct s_philo	*philo;
 }						t_monit;
 
 // ? BASE FUNCTIONS (LIB SUBSTITUTE) :
-size_t	ft_strlen(const char *str);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(char *nptr, int *error);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 // ? PARSING FUNCTIONS :
 bool	is_entry_valid(int argc, t_monit *table);
 void	mssleep(int duration, struct timeval *time);
+
+// ? THREADS MANAGER :
+int		init_fork(t_monit *table);
+void	clean_forks(t_monit *table);
+void	init_philo(t_monit *table);
+bool	thread_join(t_monit *table);
+bool	thread_maker(t_monit *table);
+bool	thread_init(t_monit *table);
 
 // ? COMPARE DATAS :
 bool	is_dead(t_philo *philo, bool print);

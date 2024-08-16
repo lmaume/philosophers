@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:12:33 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/15 17:58:52 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/16 15:46:34 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	mssleep(int duration, struct timeval *time)
 	long int	time_it;
 	long int	timer;
 
-	printf("fil de Putin.\n");
 	time_it = ms_time(time);
 	while (1)
 	{

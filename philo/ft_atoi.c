@@ -6,13 +6,48 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:49:52 by lmaume            #+#    #+#             */
-/*   Updated: 2024/06/20 11:51:28 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/08/16 17:22:19 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-size_t	ft_strlen(const char *str)
+static void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	if (n == 0)
+		return (s);
+	while (i <= n - 1)
+	{
+		((char *)s)[i] = (char)c;
+		i++;
+	}
+	return (s);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	int		*ptr;
+	size_t	overflow;
+
+	if (!nmemb || !size)
+		return (malloc(0));
+	overflow = nmemb * size;
+	if ((overflow / nmemb) != size)
+		return (NULL);
+	else
+	{
+		ptr = malloc(size * nmemb);
+		if (!ptr)
+			return (NULL);
+		ft_memset(ptr, 0, size * nmemb);
+	}
+	return ((void *)ptr);
+}
+
+static size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
@@ -22,7 +57,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+static int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
 

@@ -6,13 +6,14 @@
 #    By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 16:44:17 by lmaume            #+#    #+#              #
-#    Updated: 2024/08/15 15:15:06 by lmaume           ###   ########.fr        #
+#    Updated: 2024/08/16 18:14:09 by lmaume           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philosophers
 
 SRCS =	philosophers.c \
+		thread_manager.c \
 		parsing.c \
 		ft_atoi.c \
 		time.c \
