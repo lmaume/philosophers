@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/16 19:00:08 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/17 17:41:06 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,16 @@
 
 void	print_death(t_philo *philo)
 {
+	printf("coucou n%d c le purgratoire\n", philo->id);
+
+
+	
 	pthread_mutex_lock(philo->table->print_right);
+	printf("print right lock\n");
 	printf("\e[1;31m%ld %d died.\e[0m\n", \
 		(ms_time(philo->table->time) - philo->table->started_at), philo->id);
 	pthread_mutex_unlock(philo->table->print_right);
+	printf("print right unlock\n");
 }
 
 static void	*routine(void	*arg)
@@ -29,18 +35,18 @@ static void	*routine(void	*arg)
 		mssleep(10, philo->table->time);
 	while (1)
 	{
-		printf("de but routine\n");
+		printf("debut cycle\n");
 		if (philo->table->end == true)
 			return (0);
-		printf("pre think\n");
+		printf("%d pre-think\n", philo->id);
 		print_think(philo);
 		if (philo->table->end == true)
 			return (0);
-		printf("pre eat\n");
+		printf("%d pre-eat\n", philo->id);
 		could_i_eat(philo);
 		if (philo->table->end == true)
 			return (0);
-		printf("pre sleep\n");
+		printf("%d pre-sleep\n", philo->id);
 		print_sleep(philo);
 		mssleep(philo->table->time_to_sleep, philo->table->time);
 		if (philo->table->end == true)
@@ -78,6 +84,7 @@ static bool	init_structure(t_monit	*table, int argc, char **argv)
 	else
 		table->is_limited = false;
 	table->end = false;
+	table->time = malloc(sizeof(table->time));
 	table->started_at = (ms_time(table->time));
 	table->philo_number = ft_atoi(argv[1], NULL);
 	table->time_to_die = ft_atoi(argv[2], NULL);

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:12:33 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/16 15:46:34 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/17 17:57:18 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,25 @@ void	mssleep(int duration, struct timeval *time)
 			return ;
 		usleep(1000);
 	}
+}
+
+bool	is_all_eaten(t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i <= philo->table->philo_number - 1)
+	{
+		if (philo->table->philo[i].eat_count >= philo->table->must_eat)
+		{
+			printf("un gars a fini\n");
+			i++;
+		}
+		else
+			return (false);
+	}
+	printf("toulemond a fini\n");
+	philo->table->end = true;
+	print_ate(philo);
+	return (true);
 }

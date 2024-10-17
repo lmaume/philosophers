@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:50:03 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/16 19:03:00 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/17 18:00:36 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_ate(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
-	if (is_dead(philo, true) == true)
+	if (is_dead(philo) == true)
 	{
 		pthread_mutex_unlock(philo->table->print_right);
 		return ;
@@ -28,7 +28,7 @@ void	print_ate(t_philo *philo)
 void	print_sleep(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
-	if (is_dead(philo, true) == true)
+	if (is_dead(philo) == true || philo->table->end == true)
 	{
 		pthread_mutex_unlock(philo->table->print_right);
 		return ;
@@ -41,8 +41,11 @@ void	print_sleep(t_philo *philo)
 void	print_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
-	if (is_dead(philo, true) == true)
+	if (is_dead(philo) == true || philo->table->end == true)
+	{
+		pthread_mutex_unlock(philo->table->print_right);
 		return ;
+	}
 	printf("\e[0;32m%ld %d has taken a fork.\e[0m\n", \
 		(ms_time(philo->table->time) - philo->table->started_at), philo->id);
 	pthread_mutex_unlock(philo->table->print_right);
@@ -51,7 +54,7 @@ void	print_fork(t_philo *philo)
 void	print_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
-	if (is_dead(philo, true) == true)
+	if (is_dead(philo) == true || philo->table->end == true)
 	{
 		pthread_mutex_unlock(philo->table->print_right);
 		return ;
@@ -64,7 +67,7 @@ void	print_eat(t_philo *philo)
 void	print_think(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
-	if (is_dead(philo, true) == true)
+	if (is_dead(philo) == true || philo->table->end == true)
 	{
 		pthread_mutex_unlock(philo->table->print_right);
 		return ;

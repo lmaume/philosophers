@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/16 18:15:05 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/17 15:42:04 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ bool	thread_maker(t_monit *table);
 bool	thread_init(t_monit *table);
 
 // ? COMPARE DATAS :
-bool	is_dead(t_philo *philo, bool print);
+bool	is_dead(t_philo *philo);
+bool	is_all_eaten(t_philo *philo);
 void	could_i_eat(t_philo *philo);
 long	ms_time(struct timeval *time);
 
