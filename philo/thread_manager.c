@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:02:51 by lmaume            #+#    #+#             */
-/*   Updated: 2024/08/16 18:12:42 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/18 16:39:16 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ bool	thread_maker(t_monit *table)
 {
 	table->philo = ft_calloc(sizeof(t_philo), table->philo_number);
 	table->print_right = ft_calloc(sizeof(pthread_mutex_t), 1);
+	table->state_right = ft_calloc(sizeof(pthread_mutex_t), 1);
 	thread_init(table);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/17 18:04:05 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/18 17:08:06 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ bool	is_dead(t_philo *philo)
 	if (((ms_time(philo->table->time) - philo->table->started_at)) - \
 						(philo->last_meal) > philo->table->time_to_die)
 	{
+		pthread_mutex_lock(philo->table->state_right);
 		philo->table->end = true;
-		printf("%d t mort\n", philo->id);
+		pthread_mutex_unlock(philo->table->state_right);
 		print_death(philo);
 		return (true);
 	}
@@ -34,14 +35,24 @@ long	ms_time(struct timeval *time)
 
 static void	eating_process(t_philo *philo)
 {
-	print_fork(philo);
-	print_fork(philo);
-	print_eat(philo);
-	if (gettimeofday(philo->table->time, NULL) != 0)
-		return ;
-	philo->last_meal = (ms_time(philo->table->time) \
-										- philo->table->started_at);
-	mssleep(philo->table->time_to_eat, philo->table->time);
+	if (philo->table->end == false && is_dead(philo) == false)
+	{
+		print_fork(philo);
+		if (philo->table->end == false && is_dead(philo) == false)
+		{
+			print_fork(philo);
+			if (philo->table->end == false && is_dead(philo) == false)
+			{
+				print_eat(philo);
+				if (gettimeofday(philo->table->time, NULL) != 0)
+					return ;
+				philo->last_meal = (ms_time(philo->table->time) \
+											- philo->table->started_at);
+				mssleep(philo->table->time_to_eat, philo->table->time);
+			}
+		}
+	}
+	return ;
 }
 
 static void	unlock_forks(t_philo *philo, int opt)
@@ -57,18 +68,22 @@ static void	unlock_forks(t_philo *philo, int opt)
 
 void	could_i_eat(t_philo *philo)
 {
-	printf("%d wants to eat\n", philo->id);
 	if (philo->table->is_limited == true)
-	if (is_all_eaten(philo) == true)
+	if (is_all_eaten(philo) == true )
 		return ;
 	pthread_mutex_lock(philo->fork);
-	if (philo->table->end == true)
-		return (unlock_forks(philo, 1));
-	pthread_mutex_lock(philo->table->philo[philo->id \
+
+
+	if (philo->table->end == false && is_dead(philo) == false)
+	{
+		pthread_mutex_lock(philo->table->philo[philo->id \
 					% philo->table->philo_number].fork);
-	if (philo->table->end == true)
-		return (unlock_forks(philo, 2));
-	eating_process(philo);
-	unlock_forks(philo, 2);
-	philo->eat_count++;
+		if (philo->table->end == false || is_dead(philo) == true)
+			eating_process(philo);
+		unlock_forks(philo, 2);
+		philo->eat_count++;
+		return ;
+	}
+	unlock_forks(philo, 1);
+	return ;
 }
