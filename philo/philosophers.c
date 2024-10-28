@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/18 17:10:01 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/28 14:52:21 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_death(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->print_right);
 	printf("\e[1;31m%ld %d died.\e[0m\n", \
-		(ms_time(philo->table->time) - philo->table->started_at), philo->id);
+		(ms_time(&philo->table->time) - philo->table->started_at), philo->id);
 	pthread_mutex_lock(philo->table->state_right);
 	philo->table->death_lock = true;
 	pthread_mutex_unlock(philo->table->state_right);
@@ -30,7 +30,7 @@ static void	*routine(void	*arg)
 
 	philo = arg;
 	if (philo->id % 2 == 0)
-		mssleep(10, philo->table->time);
+		mssleep(10, &philo->table->time);
 	while (1)
 	{
 		if (philo->table->end == true)
@@ -42,7 +42,7 @@ static void	*routine(void	*arg)
 		if (philo->table->end == true)
 			return (0);
 		print_sleep(philo);
-		mssleep(philo->table->time_to_sleep, philo->table->time);
+		mssleep(philo->table->time_to_sleep, &philo->table->time);
 		if (philo->table->end == true)
 			return (0);
 	}
@@ -81,8 +81,7 @@ static bool	init_structure(t_monit	*table, int argc, char **argv)
 		table->is_limited = false;
 	table->death_lock = false;
 	table->end = false;
-	table->time = malloc(sizeof(table->time));
-	table->started_at = (ms_time(table->time));
+	table->started_at = (ms_time(&table->time));
 	table->philo_number = ft_atoi(argv[1], NULL);
 	table->time_to_die = ft_atoi(argv[2], NULL);
 	table->time_to_eat = ft_atoi(argv[3], NULL);

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/18 16:37:17 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/28 15:00:30 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_monitor
 	bool			is_limited;
 	pthread_mutex_t	*print_right;
 	pthread_mutex_t	*state_right;
-	struct timeval	*time;
+	struct timeval	time;
 	struct s_philo	*philo;
 }						t_monit;
 

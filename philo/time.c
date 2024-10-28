@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/18 17:08:06 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/28 14:52:41 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_dead(t_philo *philo)
 {
-	if (((ms_time(philo->table->time) - philo->table->started_at)) - \
+	if (((ms_time(&philo->table->time) - philo->table->started_at)) - \
 						(philo->last_meal) > philo->table->time_to_die)
 	{
 		pthread_mutex_lock(philo->table->state_right);
@@ -44,11 +44,11 @@ static void	eating_process(t_philo *philo)
 			if (philo->table->end == false && is_dead(philo) == false)
 			{
 				print_eat(philo);
-				if (gettimeofday(philo->table->time, NULL) != 0)
+				if (gettimeofday(&philo->table->time, NULL) != 0)
 					return ;
-				philo->last_meal = (ms_time(philo->table->time) \
+				philo->last_meal = (ms_time(&philo->table->time) \
 											- philo->table->started_at);
-				mssleep(philo->table->time_to_eat, philo->table->time);
+				mssleep(philo->table->time_to_eat, &philo->table->time);
 			}
 		}
 	}
