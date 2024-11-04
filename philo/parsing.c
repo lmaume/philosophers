@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:12:33 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/18 16:50:14 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/30 14:38:18 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,15 @@ bool	is_all_eaten(t_philo *philo)
 	pthread_mutex_unlock(philo->table->state_right);
 	print_ate(philo);
 	return (true);
+}
+
+int	one_philo(t_philo *philo)
+{
+	print_fork(philo);
+	mssleep(philo->table->time_to_die, &philo->table->time);
+	print_death(philo);
+	pthread_mutex_lock(philo->table->state_right);
+	philo->table->end = true;
+	pthread_mutex_unlock(philo->table->state_right);
+	return (0);
 }

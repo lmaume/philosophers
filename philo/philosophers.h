@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/28 15:00:30 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/10/30 14:30:35 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	*ft_calloc(size_t nmemb, size_t size);
 // ? PARSING FUNCTIONS :
 bool	is_entry_valid(int argc, t_monit *table);
 void	mssleep(int duration, struct timeval *time);
+int		one_philo(t_philo *philo);
 
 // ? THREADS MANAGER :
 int		init_fork(t_monit *table);

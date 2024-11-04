@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/28 14:52:21 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/11/04 16:02:38 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ bool	thread_init(t_monit *table)
 		return (1);
 	init_philo(table);
 	init_fork(table);
+	if (table->philo_number == 1)
+		return (one_philo(&table->philo[0]), true);
 	while (i < table->philo_number)
 	{
 		if (pthread_create(&table->philo[i].philo, NULL, \
@@ -109,4 +111,4 @@ int	main(int argc, char **argv)
 	free(table.state_right);
 	free(table.philo);
 	return (0);
-}
+} 
