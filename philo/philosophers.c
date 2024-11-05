@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/11/04 16:02:38 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/11/05 16:26:00 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,4 @@ int	main(int argc, char **argv)
 	free(table.state_right);
 	free(table.philo);
 	return (0);
-} 
+}
