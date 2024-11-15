@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:13:05 by lmaume            #+#    #+#             */
-/*   Updated: 2024/11/05 16:26:00 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/11/15 16:32:04 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_death(t_philo *philo)
 {
-	pthread_mutex_lock(philo->table->print_right);
+	pthread_mutex_lock(philo->table->print_right);			// ! on inverse pas les mutex A B -> B A ! //
 	printf("\e[1;31m%ld %d died.\e[0m\n", \
 		(ms_time(&philo->table->time) - philo->table->started_at), philo->id);
 	pthread_mutex_lock(philo->table->state_right);
@@ -30,19 +30,19 @@ static void	*routine(void	*arg)
 
 	philo = arg;
 	if (philo->id % 2 == 0)
-		mssleep(10, &philo->table->time);
+		mssleep(philo, 10, &philo->table->time);	// * on est paire, on attend pour eviter les bousculades
 	while (1)
 	{
 		if (philo->table->end == true)
 			return (0);
-		print_think(philo);
+		print_think(philo);						// * chaque print appelle is_dead
 		if (philo->table->end == true)
 			return (0);
-		could_i_eat(philo);
+		could_i_eat(philo);						// * la partie interessante : )
 		if (philo->table->end == true)
 			return (0);
 		print_sleep(philo);
-		mssleep(philo->table->time_to_sleep, &philo->table->time);
+		mssleep(philo, philo->table->time_to_sleep, &philo->table->time);
 		if (philo->table->end == true)
 			return (0);
 	}
@@ -69,7 +69,7 @@ bool	thread_init(t_monit *table)
 			return (1);
 		i++;
 	}
-	thread_join(table);
+	thread_join(table);			// ? ils s'attendent et se detruisent
 	return (true);
 }
 
@@ -104,8 +104,8 @@ int	main(int argc, char **argv)
 		return (1);
 	while (table.end != true)
 		sleep(1);
-	clean_forks(&table);
-	pthread_mutex_destroy(table.print_right);
+	clean_forks(&table);						// * tout ce qui suit aurait pu etre dans une fonction 
+	pthread_mutex_destroy(table.print_right);	// * lave vaisselle mais c'est tres bien comme ca aussi
 	pthread_mutex_destroy(table.state_right);
 	free(table.print_right);
 	free(table.state_right);

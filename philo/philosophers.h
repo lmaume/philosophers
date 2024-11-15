@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 11:04:46 by lmaume            #+#    #+#             */
-/*   Updated: 2024/10/30 14:30:35 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/11/15 16:35:08 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-struct	s_monitor;
+struct	s_monitor;				// ? pour que chaque philo accede a la table, on la prototype avant
 
-typedef struct s_philo
+typedef struct s_philo			// ! ne pas confondre la struct t_philo et le pthread_t philo
 {
 	int					id;
 	int					eat_count;
@@ -33,7 +33,7 @@ typedef struct s_philo
 	struct s_monitor	*table;
 }						t_philo;
 
-typedef struct s_monitor
+typedef struct s_monitor		// ? C'est la table
 {
 	int				philo_number;
 	int				time_to_die;
@@ -56,10 +56,10 @@ void	*ft_calloc(size_t nmemb, size_t size);
 
 // ? PARSING FUNCTIONS :
 bool	is_entry_valid(int argc, t_monit *table);
-void	mssleep(int duration, struct timeval *time);
+void	mssleep(t_philo *philo, int duration, struct timeval *time);
 int		one_philo(t_philo *philo);
 
-// ? THREADS MANAGER :
+// ? THREADS MANAGER :							(ici on appelle toujours la table)
 int		init_fork(t_monit *table);
 void	clean_forks(t_monit *table);
 void	init_philo(t_monit *table);
@@ -68,10 +68,10 @@ bool	thread_maker(t_monit *table);
 bool	thread_init(t_monit *table);
 
 // ? COMPARE DATAS :
-bool	is_dead(t_philo *philo);
+long	ms_time(struct timeval *time);
+bool	is_dead(t_philo *philo);			// *(a partir de la on appelle toujours t_philo)
 bool	is_all_eaten(t_philo *philo);
 void	could_i_eat(t_philo *philo);
-long	ms_time(struct timeval *time);
 
 // ? PRINTS :
 void	print_ate(t_philo *philo);

@@ -6,7 +6,7 @@
 /*   By: lmaume <lmaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:23:57 by lmaume            #+#    #+#             */
-/*   Updated: 2024/11/04 16:03:38 by lmaume           ###   ########.fr       */
+/*   Updated: 2024/11/15 16:26:34 by lmaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	eating_process(t_philo *philo)
 	if (philo->table->end == false && is_dead(philo) == false)
 	{
 		print_fork(philo);
-		if (philo->table->end == false && is_dead(philo) == false)
+		if (philo->table->end == false && is_dead(philo) == false)		//? verif, print,ferif, print....
 		{
 			print_fork(philo);
 			if (philo->table->end == false && is_dead(philo) == false)
@@ -49,8 +49,8 @@ static void	eating_process(t_philo *philo)
 				if (gettimeofday(&philo->table->time, NULL) != 0)
 					return ;
 				philo->last_meal = (ms_time(&philo->table->time) \
-											- philo->table->started_at);
-				mssleep(philo->table->time_to_eat, &philo->table->time);
+											- philo->table->started_at);	// * subject said : "since the beginning of their last meal"
+				mssleep(philo, philo->table->time_to_eat, &philo->table->time);	// * alors on attend apres avoir update.
 			}
 		}
 	}
@@ -71,19 +71,19 @@ static void	unlock_forks(t_philo *philo, int opt)
 void	could_i_eat(t_philo *philo)
 {
 	if (philo->table->is_limited == true)
-		if (is_all_eaten(philo) == true)
+		if (is_all_eaten(philo) == true)			// * verifie s'ils ont tous assez mange
 			return ;
-	pthread_mutex_lock(philo->fork);
+	pthread_mutex_lock(philo->fork);							//? premiere fourchette
 	if (philo->table->end == false && is_dead(philo) == false)
 	{
 		pthread_mutex_lock(philo->table->philo[philo->id \
-					% philo->table->philo_number].fork);
+					% philo->table->philo_number].fork);		//? deuxieme fourchette
 		if (philo->table->end == false || is_dead(philo) == true)
 			eating_process(philo);
-		unlock_forks(philo, 2);
+		unlock_forks(philo, 2);									//? unlock les deux fourchettes a la fin
 		philo->eat_count++;
 		return ;
 	}
-	unlock_forks(philo, 1);
+	unlock_forks(philo, 1);							//? unlock une seule si la deuxieme n'a pas ete prise
 	return ;
 }
